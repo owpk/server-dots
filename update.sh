@@ -1,3 +1,3 @@
 #!/bin/sh
 
-git pull --strategy-option=ours
+git pull origin main --strategy-option=ours
