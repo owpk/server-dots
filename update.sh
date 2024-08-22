@@ -1,4 +1,5 @@
 #!/bin/sh
+git config core.editor emacs
 git config pull.rebase false 
 git config user.name "$USER"
 git config user.email "--auto--"
