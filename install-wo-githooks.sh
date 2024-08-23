@@ -2,13 +2,17 @@
 
 echo "please make sure you have install dependencies: $(cat ./deps)"
 
-mkdir $HOME/.config
-mkdir $HOME/.local/bin
+LOCAL_BIN=$HOME/.local/bin
 CFG=$HOME/.config
+
+mkdir $CFG 2> /dev/null
+mkdir $LOCAL_BIN 2> /dev/null
+
 CUR=$(pwd)
 
-stow --adopt -vt $CUR/.config $CFG
+stow --adopt -vt $CFG .config
+stow --adopt -vt $LOCAL_BIN scripts 
 
-ln -s $CUR/.zshenv $HOME/
-ln -s $CUR/.tmux.conf $HOME/
-cp scripts/* $HOME/.local/bin/
+ln -nsf $CUR/.zshenv $HOME/
+ln -nsf $CUR/.tmux.conf $HOME/
+
