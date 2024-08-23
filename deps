@@ -1,9 +1,10 @@
 gcc
+stow
+g++
 eza
 neovim
 fzf
 tmux
 ranger
-g++
 shellcheck
-stow
+ripgrep
