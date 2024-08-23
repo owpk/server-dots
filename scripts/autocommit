@@ -16,14 +16,15 @@ SIZE=${#DIFFS}
 
 DEFAULT_MSG="common update"
 
-git fetch origin  # Ensure you have the latest changes from the remote
-common_ancestor=$(git merge-base HEAD master)
-
-if git diff --quiet "$common_ancestor" master; then
-    echo "There is no changes detected since your branch is up to date with master. Exiting with default message"
-    export AI_MESSAGE_AUTOCOMMIT=$DEFAULT_MSG
-    exit 0
-fi
+# TODO
+#git fetch origin  # Ensure you have the latest changes from the remote
+#common_ancestor=$(git merge-base HEAD $MAIN_BRANCH)
+#
+#if git diff --quiet "$common_ancestor" master; then
+#    echo "There is no changes detected since your branch is up to date with master. Exiting with default message"
+#    export AI_MESSAGE_AUTOCOMMIT=$DEFAULT_MSG
+#    exit 0
+#fi
 
 if [[ -z "${DIFFS// }" || $SIZE -lt 20 ]]; then
     echo "Not too much changes. Exiting with default message"
