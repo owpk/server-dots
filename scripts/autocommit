@@ -1,0 +1,89 @@
+#!/bin/bash
+
+RETRY=0
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -r|--retry) RETRY=1 ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+MAIN_BRANCH="$(git symbolic-ref refs/remotes/origin/HEAD --short)"
+DIFFS=$(git diff $MAIN_BRANCH -U0)
+
+PROMPT1=$(cat <<EOF
+Prompt:
+Generate a commit message that includes the following changes:
+$DIFFS
+
+Instruction: 
+Your commit message should be from 30 to 200 characters.
+Your commit message should based only on changes i gave you.
+Format your commit messages, it should starts with "-" symbol, to separate the messages pretty.
+Please note that in the passed changes the lines that start with "-" are the deleted lines, the lines that start with "+" are the newly added changes, use this information in your commit message.
+
+Example generated commit message:
+
+- Handle empty ‘email’ fields correctly, update API docs.
+- optimize discount calculation.
+- add edge case tests.
+
+or
+
+- refactor ManagerStateHandler, add null check on state creation.
+- minor enhancements in UserController.
+
+or
+
+- add org structure retrieving.
+- add service properties.
+EOF
+)
+
+PROMPT2=$(cat <<EOF
+Prompt:
+Generate a commit message based on the following changes. The message should be concise, no longer than 72 characters, and start with an imperative verb:
+$DIFFS
+
+Example of a generated commit message:
+- Implement notifications system, optimize DB queries, update deps, fix auth vulnerability
+EOF
+)
+
+# TODO add prompts
+arr=("$PROMPT1" "$PROMPT2")
+
+next_prompt() {
+    counter=0
+
+    index=$((counter % ${#arr[@]}))
+    ELEMENT=${arr[$index]}
+    ((counter++))
+    MESSAGE=$(gigachat -n "$ELEMENT")
+    echo "$MESSAGE"
+}
+
+call() {
+    next_prompt
+    read -p "Accept message? : " YES
+
+    if [ "$YES" == "Y" ]; then 
+        export AI_MESSAGE_AUTOCOMMIT="$MESSAGE"
+    else 
+        read -p "Try another prompt? : " YES
+        if [ "$YES" == "Y" ]; then 
+            call
+        else 
+            exit 0
+        fi
+    fi
+}
+
+if [ $RETRY -eq 1 ]; then
+    call
+else 
+    next_prompt
+fi
+

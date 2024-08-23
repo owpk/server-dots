@@ -1,7 +1,46 @@
 #!/bin/bash
-BRANCH=`git branch --show current`
+
+AUTO=0
+INTR=0
+MSG=0
+
+auto_ai() {
+    . autocommit
+    MESSAGE=$AI_MESSAGE_AUTOCOMMIT
+}
+
+interactive() {
+    read -p "commit message: $U_BRANCH: " MESSAGE
+}
+
+default_strategy() {
+    auto_ai
+}
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -a|--auto) AUTO=1; break; ;;
+        -i|--interactive) interactive; INTR=1; break; ;;
+        -m|--message) MESSAGE="$2"; MSG=1; break; ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+if [[ $AUTO -eq 0 && INTR -eq 0 && MSG -eq 0 ]]; then 
+    default_strategy
+fi
+
+
+BRANCH=$(git branch --show current)
+
+U_BRANCH=$(echo "$BRANCH" | awk '{print toupper($0)}')
+
+if [ $AUTO -eq 1 ]; then 
+    auto_ai
+fi
+
 git add .
-printf "commit message: ${BRANCH^^}: "
-read msg
-git commit -m "${BRANCH^^}: $msg"
+git commit -m "$U_BRANCH: $MESSAGE"
 git push origin $BRANCH
+
