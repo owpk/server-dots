@@ -14,7 +14,7 @@ interactive() {
 }
 
 default_strategy() {
-    auto_ai
+    interactive
 }
 
 while [[ "$#" -gt 0 ]]; do
