@@ -92,7 +92,7 @@ call() {
         export AI_MESSAGE_AUTOCOMMIT="$MESSAGE"
     else 
         read -p "Try another prompt? : " YES
-        if [ "$YES" == "Y" ]; then 
+        if [[ -z "${YES}" || "$YES" == "Y" ]]; then 
             call
         else 
             exit 0
