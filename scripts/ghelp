@@ -5,7 +5,7 @@ INTR=0
 MSG=0
 
 auto_ai() {
-    . autocommit
+    . autocommit -r
     MESSAGE=$AI_MESSAGE_AUTOCOMMIT
 }
 

@@ -26,7 +26,7 @@ DEFAULT_MSG="common update"
 #    exit 0
 #fi
 
-if [[ -z "${DIFFS// }" || $SIZE -lt 20 ]]; then
+if echo "$DIFFS" | grep -qv '[^[:space:]]' || [ $SIZE -lt 20 ]; then
     echo "Not too much changes. Exiting with default message"
     export AI_MESSAGE_AUTOCOMMIT=$DEFAULT_MSG
     exit 0
