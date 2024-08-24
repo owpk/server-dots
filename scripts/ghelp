@@ -4,6 +4,9 @@ AUTO=0
 INTR=0
 MSG=0
 
+BRANCH=$(git branch --show current)
+U_BRANCH=$(echo "$BRANCH" | awk '{print toupper($0)}')
+
 auto_ai() {
     . autocommit -r
     MESSAGE=$AI_MESSAGE_AUTOCOMMIT
@@ -30,11 +33,6 @@ done
 if [[ $AUTO -eq 0 && INTR -eq 0 && MSG -eq 0 ]]; then 
     default_strategy
 fi
-
-
-BRANCH=$(git branch --show current)
-
-U_BRANCH=$(echo "$BRANCH" | awk '{print toupper($0)}')
 
 if [ $AUTO -eq 1 ]; then 
     auto_ai
