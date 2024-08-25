@@ -7,3 +7,4 @@ __pycache__/
 /.config/nvim/plugin/packer_compiled.lua
 .zsh_history
 .DS_Store
+*.zwc
