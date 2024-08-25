@@ -8,3 +8,5 @@ tmux
 ranger
 shellcheck
 ripgrep
+npm
+node
