@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "please make sure you have install dependencies: $(cat ./deps)"
 
@@ -21,5 +21,5 @@ git checkout -b $USER
 read -p "Install gigachat? (Y/n): " INSTALL_GIGA
 
 if [ "$INSTALL_GIGA" == "Y" ]; then
-    sh <(curl -L https://github.com/owpk/gigachat-grpc-client/blob/main/install.sh)
+    sh <(curl -L https://github.com/owpk/gigachat-grpc-client/raw/main/install.sh)
 fi
