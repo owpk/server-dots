@@ -8,3 +8,4 @@ __pycache__/
 .zsh_history
 .DS_Store
 *.zwc
+lazy-lock.json
