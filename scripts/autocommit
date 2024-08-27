@@ -10,8 +10,7 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-MAIN_BRANCH="$(git symbolic-ref refs/remotes/origin/HEAD --short)"
-DIFFS=$(git diff $MAIN_BRANCH -U0)
+DIFFS=$(git diff -U0)
 SIZE=${#DIFFS}
 
 DEFAULT_MSG="common update"
