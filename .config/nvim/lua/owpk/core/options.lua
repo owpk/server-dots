@@ -7,8 +7,8 @@ opt.number = true
 -- tabs & indentation
 opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent from current line when starting new one
-opt.tabstop = 3 -- 3 spaces for tabs (prettier default)
-opt.shiftwidth = 3 -- 3 spaces for indent width
+opt.tabstop = 4 -- spaces for tabs (prettier default)
+opt.shiftwidth = 4 -- spaces for indent width
 opt.wrap = false
 
 -- search settings
