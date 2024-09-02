@@ -73,23 +73,36 @@ EOF
 # TODO add prompts
 arr=("$PROMPT1" "$PROMPT2")
 
+
 next_prompt() {
     counter=0
 
     index=$((counter % ${#arr[@]}))
     ELEMENT=${arr[$index]}
     ((counter++))
+
+    TEMP_MSG_FILE=/tmp/ghelp_autocommit_$(date +%H%M%S).tmp
     MESSAGE=$(gigachat -n "$ELEMENT")
-    echo "$MESSAGE"
+    
+    echo "$MESSAGE" > $TEMP_MSG_FILE
+    cat $TEMP_MSG_FILE
+
+    read -p "Edit message? (y/n) : " EDIT
+
+    if [[ -z "${EDIT}" || "$EDIT" == "Y" ]]; then
+       vim $TEMP_MSG_FILE
+       MESSAGE=$(cat $TEMP_MSG_FILE)
+    fi
+
+    export AI_MESSAGE_AUTOCOMMIT="$MESSAGE"
 }
 
 call() {
+
     next_prompt
     read -p "Accept message? : " YES
 
-    if [[ -z "${YES}" || "$YES" == "Y" ]]; then 
-        export AI_MESSAGE_AUTOCOMMIT="$MESSAGE"
-    else 
+    if [[ "$YES" != "Y" ]]; then 
         read -p "Try another prompt? : " YES
         if [[ -z "${YES}" || "$YES" == "Y" ]]; then 
             call
