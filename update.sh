@@ -1,5 +1,5 @@
-#!/bin/sh
-git config core.editor emacs
+#!/bin/bash
+git config core.editor vim
 git config pull.rebase false 
 git config user.name "$USER"
 git config user.email "--auto--"
