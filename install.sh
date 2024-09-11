@@ -20,6 +20,9 @@ git checkout -b $USER
 
 read -p "Install gigachat? (Y/n): " INSTALL_GIGA
 
+chsh -s $(which zsh) $USER
+
 if [ "$INSTALL_GIGA" == "Y" ]; then
     sh <(curl -L https://github.com/owpk/gigachat-grpc-client/raw/main/install.sh)
 fi
+
