@@ -2,6 +2,7 @@
 
 DEFAULT_MSG="common update"
 RETRY=1
+CURRENT_BRANCH=$(git branch --show-current)
 
 tolower() {
    echo $1 | awk '{print tolower($0)}'
@@ -35,7 +36,7 @@ function use_global() {
    log "using global"
    MAIN=$(git symbolic-ref refs/remotes/origin/HEAD)
    MAIN="${MAIN##*/}"
-   DIFFS=$(git log --stat $MAIN)
+   DIFFS=$(git log --oneline --no-merges $MAIN..$CURRENT_BRANCH)
 }
 
 if [[ $GLOBAL -eq 1 ]]; then
@@ -51,7 +52,7 @@ if [ $SIZE -lt 10 ]; then
     echo "Not too much changes. Exiting with default message"
     export AI_MESSAGE_AUTOCOMMIT=$DEFAULT_MSG
     exit 0
- elif [ $SIZE -gt 400000 ]; then
+ elif [ $SIZE -gt 500000 ]; then
    log "too much message size: $SIZE, fallback to global usage"
    use_global
 fi
@@ -114,14 +115,6 @@ next_prompt() {
     echo "$MESSAGE" > $TEMP_MSG_FILE
     cat $TEMP_MSG_FILE
 
-    read -r -p "Edit message? (Y/N) : " EDIT <&1
-    
-    EDIT=$(tolower $EDIT)
-
-    if [[ -z "${EDIT}" || "$EDIT" == "y" ]]; then
-       vim "$TEMP_MSG_FILE" <&1
-       MESSAGE=$(cat $TEMP_MSG_FILE) 
-    fi
 
     export AI_MESSAGE_AUTOCOMMIT="$MESSAGE"
 }
@@ -135,7 +128,6 @@ call() {
     ACCEPT=$(tolower $ACCEPT)
 
     if ! [[ -z "${ACCEPT}" || "$ACCEPT" = "y" ]]; then 
-
        read -p "Try another prompt? (Y/N) : " ANOTHER <&1
         ANOTHER=$(tolower $ANOTHER)
 
@@ -144,6 +136,13 @@ call() {
         else 
             exit 0
         fi
+     else 
+      read -r -p "Edit message? (Y/N) : " EDIT <&1
+      EDIT=$(tolower $EDIT)
+      if [[ -z "${EDIT}" || "$EDIT" == "y" ]]; then
+         vim "$TEMP_MSG_FILE" <&1
+         MESSAGE=$(cat $TEMP_MSG_FILE) 
+      fi
     fi
 }
 
