@@ -1,34 +1,59 @@
 #!/bin/bash
 
-RETRY=0
+DEFAULT_MSG="common update"
+RETRY=1
+
+tolower() {
+   echo $1 | awk '{print tolower($0)}'
+}
+
+function log() {
+   if [[ $LOG -eq 1 ]]; then
+      echo "$1"
+   fi
+}
+
+function readStd() {
+   log "reading stdin"
+   while read -r line; do
+      DIFFS="$DIFFS$line"
+   done
+}
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -r|--retry) RETRY=1 ;;
+        -g|--global) GLOBAL=1; ;;
+        #-r|--retry) RETRY=1; ;;
+        -v|--verbose) LOG=1; ;;
+        -) readStd; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
 done
 
-DIFFS=$(git diff -U0)
+function use_global() {
+   log "using global"
+   MAIN=$(git symbolic-ref refs/remotes/origin/HEAD)
+   MAIN="${MAIN##*/}"
+   DIFFS=$(git log --stat $MAIN)
+}
+
+if [[ $GLOBAL -eq 1 ]]; then
+   use_global
+elif [ -z "$DIFFS" ]; then
+   DIFFS=$(git diff)
+fi
+
 SIZE=${#DIFFS}
+log "current message size: $SIZE"
 
-DEFAULT_MSG="common update"
-
-# TODO
-#git fetch origin  # Ensure you have the latest changes from the remote
-#common_ancestor=$(git merge-base HEAD $MAIN_BRANCH)
-#
-#if git diff --quiet "$common_ancestor" master; then
-#    echo "There is no changes detected since your branch is up to date with master. Exiting with default message"
-#    export AI_MESSAGE_AUTOCOMMIT=$DEFAULT_MSG
-#    exit 0
-#fi
-
-if echo "$DIFFS" | grep -qv '[^[:space:]]' || [ $SIZE -lt 20 ]; then
+if [ $SIZE -lt 10 ]; then
     echo "Not too much changes. Exiting with default message"
     export AI_MESSAGE_AUTOCOMMIT=$DEFAULT_MSG
     exit 0
+ elif [ $SIZE -gt 400000 ]; then
+   log "too much message size: $SIZE, fallback to global usage"
+   use_global
 fi
 
 PROMPT1=$(cat <<EOF
@@ -73,25 +98,29 @@ EOF
 # TODO add prompts
 arr=("$PROMPT1" "$PROMPT2")
 
-
 next_prompt() {
     counter=0
 
     index=$((counter % ${#arr[@]}))
-    ELEMENT=${arr[$index]}
+    local ELEMENT=${arr[$index]}
     ((counter++))
 
     TEMP_MSG_FILE=/tmp/ghelp_autocommit_$(date +%H%M%S).tmp
-    MESSAGE=$(gigachat -n "$ELEMENT")
+    log "Making 'Gigachat' request with conent:"
+    log "$ELEMENT"
+
+    MESSAGE=$(echo $ELEMENT | gigachat -n -)
     
     echo "$MESSAGE" > $TEMP_MSG_FILE
     cat $TEMP_MSG_FILE
 
-    read -p "Edit message? (y/n) : " EDIT
+    read -r -p "Edit message? (Y/N) : " EDIT <&1
+    
+    EDIT=$(tolower $EDIT)
 
-    if [[ -z "${EDIT}" || "$EDIT" == "Y" ]]; then
-       vim $TEMP_MSG_FILE
-       MESSAGE=$(cat $TEMP_MSG_FILE)
+    if [[ -z "${EDIT}" || "$EDIT" == "y" ]]; then
+       vim "$TEMP_MSG_FILE" <&1
+       MESSAGE=$(cat $TEMP_MSG_FILE) 
     fi
 
     export AI_MESSAGE_AUTOCOMMIT="$MESSAGE"
@@ -100,11 +129,17 @@ next_prompt() {
 call() {
 
     next_prompt
-    read -p "Accept message? : " YES
 
-    if [[ "$YES" != "Y" ]]; then 
-        read -p "Try another prompt? : " YES
-        if [[ -z "${YES}" || "$YES" == "Y" ]]; then 
+    read -p "Accept message? (Y/N): " ACCEPT <&1
+
+    ACCEPT=$(tolower $ACCEPT)
+
+    if ! [[ -z "${ACCEPT}" || "$ACCEPT" = "y" ]]; then 
+
+       read -p "Try another prompt? (Y/N) : " ANOTHER <&1
+        ANOTHER=$(tolower $ANOTHER)
+
+        if [[ -z "${ANOTHER}" || "$ANOTHER" == "y" ]]; then 
             call
         else 
             exit 0

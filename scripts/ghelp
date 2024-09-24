@@ -8,7 +8,7 @@ BRANCH=$(git branch --show current)
 U_BRANCH=$(echo "$BRANCH" | awk '{print toupper($0)}')
 
 auto_ai() {
-    . autocommit -r
+   . autocommit
     MESSAGE=$AI_MESSAGE_AUTOCOMMIT
 }
 
