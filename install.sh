@@ -14,8 +14,12 @@ function prepareBackups() {
    BACKUP_DIR="$HOME/dotfiles-backups"
    mkdir -p $BACKUP_DIR/.config 2> /dev/null
 
-   for filename in $DOT/.config/*; do
-      mv $CFG/$filename $BACKUP_DIR/.config/
+   TR=$(ls $CUR/.config)
+
+   for filename in $TR; do
+      echo "Processing backup for file: $filename"
+      echo "MV: $CFG/$filename -> $BACKUP_DIR/.config"
+      mv $CFG/$filename $BACKUP_DIR/.config
    done
 
    mv $HOME/.zshenv $BACKUP_DIR/
