@@ -1,6 +1,5 @@
 gcc
 stow
-g++
 eza
 neovim
 fzf
@@ -9,4 +8,4 @@ ranger
 shellcheck
 ripgrep
 npm
-node
+nodejs
