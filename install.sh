@@ -36,9 +36,4 @@ git checkout -b $USER
 
 sudo chsh -s $(which zsh) $USER
 
-read -p "Install gigachat? (Y/n): " INSTALL_GIGA
-
-if [ "$INSTALL_GIGA" == "Y" ]; then
-    sh <(curl -L https://github.com/owpk/gigachat-grpc-client/raw/main/install.sh)
-fi
-
+curl -Ls https://github.com/owpk/gigachat-grpc-client/raw/main/install.sh | bash
