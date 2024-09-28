@@ -34,9 +34,9 @@ ln -nsf $CUR/.tmux.conf $HOME/
 
 git checkout -b $USER
 
-read -p "Install gigachat? (Y/n): " INSTALL_GIGA
+sudo chsh -s $(which zsh) $USER
 
-chsh -s $(which zsh) $USER
+read -p "Install gigachat? (Y/n): " INSTALL_GIGA
 
 if [ "$INSTALL_GIGA" == "Y" ]; then
     sh <(curl -L https://github.com/owpk/gigachat-grpc-client/raw/main/install.sh)
