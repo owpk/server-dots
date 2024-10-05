@@ -20,7 +20,6 @@ __git_files () {
 # ENV
 export ZSH="$HOME/.config/zsh/ohmyzsh"
 export ZSH_CUSTOM=$ZSH/custom
-export DOTIFLES_ROOT="$HOME/dotfiles-sway"
 
 show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
@@ -61,6 +60,7 @@ plugins=(
     fzf-tab
     git-auto-fetch
     docker-compose
+    macos
 )
 
 # ALIASES
@@ -73,7 +73,7 @@ alias hst="history | grep $1"
 alias supd="sudo pacman -Syyu"
 alias du=diskUsage
 
-
+DISABLE_AUTO_UPDATE=true
 source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
