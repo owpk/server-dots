@@ -61,6 +61,7 @@ plugins=(
     git-auto-fetch
     docker-compose
     macos
+    brew
 )
 
 # ALIASES
