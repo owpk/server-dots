@@ -65,7 +65,6 @@ plugins=(
 )
 
 # ALIASES
-alias cfg="cd ~/.config"
 alias gmvn="mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4"
 alias awmenu="curl -s https://raw.githubusercontent.com/wstam88/rofi-fontawesome/master/icon-list.txt | wofi --dmenu -i -markup-rows -p "" -columns 6 -width 100 -location 1 -lines 20 -bw 2 -yoffset -2 | cut -d\' -f2"
 alias dckd="sudo systemctl start docker"
@@ -97,10 +96,7 @@ alias ll="eza --color=always --long --git --no-filesize --icons=always --no-time
 alias lls="eza --color=always --long --icons=always --no-time --group-directories-first -o --no-permissions -a --total-size --sort=size"
 alias vim="nvim"
 alias svim="sudo -E -s nvim $@"
-alias jhelp="java -jar ~/gh/spar/jenkins-cli.jar -s http://jenkins.ctmol.ru/ -auth owpk:116a1bd02b33b7436257c0701c99beb08c build JOB $@"
-alias idea="$HOME/.local/share/JetBrains/Toolbox/scripts/idea $@"
-alias fleet="$HOME/.local/share/JetBrains/Toolbox/scripts/fleet $@"
-alias pycharm="$HOME/.local/share/JetBrains/Toolbox/scripts/pycharm $@"
+alias dckps="docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}'"
 alias giga=gigaglow
 
 # The next line updates PATH for Yandex Cloud CLI.
