@@ -1,0 +1,5 @@
+#!/bin/bash
+
+SHELL_GUIDES="/mnt/ssd/dav/notes/Shell cheat sheet/"
+SEARCH=$(echo "$@" | sed 's/\(\w\+\)/(?=.*\1)/g' | tr -d ' ')
+rg --pcre2 "$SEARCH" "$SHELL_GUIDES"
