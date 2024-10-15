@@ -1,5 +1,6 @@
 #!/bin/bash
 
-SHELL_GUIDES="/mnt/ssd/dav/notes/Shell cheat sheet/"
-SEARCH=$(echo "$@" | sed 's/\(\w\+\)/(?=.*\1)/g' | tr -d ' ')
+SHELL_GUIDES="/Users/slavavorobev/notes/notes/Shell cheat sheet"
+SEARCH=$(for word in $@; do echo -n "(?=.*${word})"; done)
+
 rg --pcre2 "$SEARCH" "$SHELL_GUIDES"
