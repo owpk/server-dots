@@ -1,6 +1,7 @@
 #!/bin/bash
 
 AUTO=0
+GLOBAL=0
 INTR=0
 MSG=0
 
@@ -8,7 +9,11 @@ BRANCH=$(git branch --show current)
 U_BRANCH=$(echo "$BRANCH" | awk '{print toupper($0)}')
 
 auto_ai() {
-   . autocommit
+   if [ $GLOBAL -eq 1 ]; then
+      . autocommit -g
+   else 
+      . autocommit
+   fi 
     MESSAGE=$AI_MESSAGE_AUTOCOMMIT
 }
 
@@ -23,6 +28,7 @@ default_strategy() {
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -a|--auto) AUTO=1; break; ;;
+        -g|--auto-global) GLOBAL=1; break; ;;
         -i|--interactive) interactive; INTR=1; break; ;;
         -m|--message) MESSAGE="$2"; MSG=1; break; ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
