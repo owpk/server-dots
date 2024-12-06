@@ -63,24 +63,24 @@ Generate a commit message that includes the following changes:
 $DIFFS
 
 Instruction: 
-Your commit message should start with summirized message no longer than 50 characters.
-Detailed description should be from 30 to 200 characters.
 Your commit message should based only on changes i gave you.
-Format your commit messages, it should starts with "-" symbol, to separate the messages pretty.
+Your commit message should start with summirized message without "-" symbol and should be no longer than 50 characters.
+Message should include detailed description which should be from 30 to 200 characters. 
+Detailed messages should follow after the summary message and starts with "-" symbol, to separate the messages pretty.
 Please note that in the passed changes the lines that start with "-" are the deleted lines, the lines that start with "+" are the newly added changes, use this information in your commit message.
+
+Main commit message format:
+<summary message>
+- <description of change 1>
+- <description of change 2>
+- ...
+- <description of change n>
 
 Example generated commit message:
 
 Implement org structure retrieving
 - add org structure retrieving.
 - add service properties.
-
-or
-
-Fix bugs and add new features
-- Handle empty ‘email’ fields correctly, update API docs.
-- optimize discount calculation.
-- add edge case tests.
 
 or
 
