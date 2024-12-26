@@ -63,26 +63,30 @@ Generate a commit message that includes the following changes:
 $DIFFS
 
 Instruction: 
-Your commit message should be from 30 to 200 characters.
 Your commit message should based only on changes i gave you.
-Format your commit messages, it should starts with "-" symbol, to separate the messages pretty.
+Your commit message should start with summirized message without "-" symbol and should be no longer than 50 characters.
+Message should include detailed description which should be from 30 to 200 characters. 
+Detailed messages should follow after the summary message and starts with "-" symbol, to separate the messages pretty.
 Please note that in the passed changes the lines that start with "-" are the deleted lines, the lines that start with "+" are the newly added changes, use this information in your commit message.
+
+Main commit message format:
+<summary message>
+- <description of change 1>
+- <description of change 2>
+- ...
+- <description of change n>
 
 Example generated commit message:
 
-- Handle empty ‘email’ fields correctly, update API docs.
-- optimize discount calculation.
-- add edge case tests.
-
-or
-
-- refactor ManagerStateHandler, add null check on state creation.
-- minor enhancements in UserController.
-
-or
-
+Implement org structure retrieving
 - add org structure retrieving.
 - add service properties.
+
+or
+
+Refactor state handler and fix bugs
+- refactor ManagerStateHandler, add null check on state creation.
+- minor enhancements in UserController.
 EOF
 )
 
@@ -92,6 +96,8 @@ Generate a commit message based on the following changes. The message should be 
 $DIFFS
 
 Example of a generated commit message:
+
+Add notification system feature, minor fixes added
 - Implement notifications system, optimize DB queries, update deps, fix auth vulnerability
 EOF
 )
@@ -114,7 +120,6 @@ next_prompt() {
     
     echo "$MESSAGE" > $TEMP_MSG_FILE
     cat $TEMP_MSG_FILE
-
 
     export AI_MESSAGE_AUTOCOMMIT="$MESSAGE"
 }
@@ -142,6 +147,7 @@ call() {
       if [[ -z "${EDIT}" || "$EDIT" == "y" ]]; then
          vim "$TEMP_MSG_FILE" <&1
          MESSAGE=$(cat $TEMP_MSG_FILE) 
+         export AI_MESSAGE_AUTOCOMMIT="$MESSAGE"
       fi
     fi
 }
