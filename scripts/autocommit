@@ -36,7 +36,7 @@ function use_global() {
    log "using global"
    MAIN=$(git symbolic-ref refs/remotes/origin/HEAD)
    MAIN="${MAIN##*/}"
-   DIFFS=$(git log --oneline --no-merges $MAIN..$CURRENT_BRANCH)
+   DIFFS=$(git diff --oneline --no-merges $MAIN..$CURRENT_BRANCH)
 }
 
 if [[ $GLOBAL -eq 1 ]]; then

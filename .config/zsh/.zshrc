@@ -26,7 +26,6 @@ show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head
 
 export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
 export FZF_ALT_C_OPTS="--previes 'eza --tree --color=always {} | head -200'"
-
 _fzf_comprun() {
   local command=$1
   shift
@@ -118,5 +117,4 @@ export PATH="/home/owpk/.assemblyai-cli:$PATH"
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
-# Spoof DPI
-export PATH=$PATH:~/.spoof-dpi/bin
+export PAGER="less -S"
