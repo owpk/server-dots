@@ -1,0 +1,9 @@
+#!/bin/sh
+
+BUFFER_COPY="xclip -selection clipboard"
+LLM_API=gigachat
+
+COMMITS=$(git log --pretty=format:%B --no-merges --first-parent $(git merge-base HEAD $(git symbolic-ref refs/remotes/origin/HEAD))..HEAD)
+SUMMERIZE=$($LLM_API summerize this commits messages: $COMMITS)
+
+$BUFFER_COPY <(echo "$SUMMERIZE \n - Full changelog:  \n $COMMITS")
