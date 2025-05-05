@@ -65,13 +65,6 @@ plugins=(
 )
 
 # ALIASES
-alias gmvn="mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4"
-alias awmenu="curl -s https://raw.githubusercontent.com/wstam88/rofi-fontawesome/master/icon-list.txt | wofi --dmenu -i -markup-rows -p "" -columns 6 -width 100 -location 1 -lines 20 -bw 2 -yoffset -2 | cut -d\' -f2"
-alias dckd="sudo systemctl start docker"
-alias dckds="sudo systemctl stop docker"
-alias hst="history | grep $1"
-alias supd="sudo pacman -Syyu"
-alias du=diskUsage
 
 DISABLE_AUTO_UPDATE=true
 source $ZSH/oh-my-zsh.sh
@@ -79,9 +72,6 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-##THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh"  ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # BINDINGS
 bindkey '^ ' autosuggest-accept
@@ -90,31 +80,50 @@ function gigaglow() {
     gigachat $@ | glow -w 80
 }
 
-# must be here
+# HISTORY SEARCH
+function hst() {
+  CMD=$(history | fzf | sed 's/^[ ]*[0-9]*[ ]*//')
+  echo "command: $CMD"
+  echo "Execute this (default Y)? (Y/n): "
+  read -s confirm
+   if [[ -z "$confirm" ]]; then
+    confirm="y"  # Treat empty input (Enter) as "y"
+   fi
+
+  if [[ "$confirm" == "Y" || "$confirm" == "y" ]]; then
+    eval "$CMD"
+  else
+    echo "Exiting."
+  fi
+}
+
 alias lt="eza --tree --level=3 --icons=always --group-directories-first"
 alias ll="eza --color=always --long --git --no-filesize --icons=always --no-time --group-directories-first -o --no-permissions -a"
 alias lls="eza --color=always --long --icons=always --no-time --group-directories-first -o --no-permissions -a --total-size --sort=size"
-alias vim="nvim"
-alias svim="sudo -E -s nvim $@"
-alias dckps="docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}'"
-alias giga=gigaglow
-
-# The next line updates PATH for Yandex Cloud CLI.
-if [ -f '/home/owpk/yandex-cloud/path.bash.inc' ]; then source '/home/owpk/yandex-cloud/path.bash.inc'; fi
-
-# The next line enables shell command completion for yc.
-if [ -f '/home/owpk/yandex-cloud/completion.zsh.inc' ]; then source '/home/owpk/yandex-cloud/completion.zsh.inc'; fi
 
 # ENHANCD
 function enhancd() {
     cd $@ && ll
 }
+
+# must be here
+alias vim="nvim"
+alias svim="sudo -E -s nvim $@"
+alias dckps="docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}'"
+alias giga=gigaglow
 alias cd=enhancd
+
+# The next line enables shell command completion for yc.
+if [ -f '/home/owpk/yandex-cloud/completion.zsh.inc' ]; then source '/home/owpk/yandex-cloud/completion.zsh.inc'; fi
 
 ##
 export PATH="/home/owpk/.assemblyai-cli:$PATH"
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+##THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh"  ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 export PAGER="less -S"
