@@ -9,3 +9,4 @@ shellcheck
 ripgrep
 npm
 nodejs
+zsh

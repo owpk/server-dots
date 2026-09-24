@@ -8,7 +8,6 @@ return {
 	},
 
 	config = function()
-		local lspcfg = require("lspconfig")
 		local mason_lspcfg = require("mason-lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 		local km = vim.keymap
@@ -72,42 +71,16 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		mason_lspcfg.setup_handlers({
-			function(server_name)
-				lspcfg[server_name].setup({
-					capabilities = capabilities,
-				})
-			end,
-			-- example config if u need special lsp configuration
-			-- ["svelte"] = function()
-			--    lspcfg["svelte"].setup({
-			--       capabilities = capabilities,
-			--       on_attach = function(client, bufnr)
-			--          vim. api.nvim_create_autocmd("BufWritePost", {
-			--             pattern = { "*.js", "*.ts" },
-			--             callback = function(ctx)
-			--                   client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
-			--             end,
-			--          })
-			--       end
-			--    })
-			-- end
-
-			["lua_ls"] = function()
-				lspcfg["lua_ls"].setup({
-					capabilities = capabilities,
-					settings = {
-						Lua = {
-							diagnostics = {
-								globals = { "vim" },
-							},
-							completition = {
-								callSnippets = "Replace",
-							},
-						},
-					},
-				})
-			end,
+		-- Neovim 0.11+ native LSP configuration; mason-lspconfig v2 removed setup_handlers.
+		vim.lsp.config("*", { capabilities = capabilities })
+		vim.lsp.config("lua_ls", {
+			settings = {
+				Lua = {
+					diagnostics = { globals = { "vim" } },
+					completion = { callSnippet = "Replace" },
+				},
+			},
 		})
+		mason_lspcfg.setup({ automatic_enable = true })
 	end,
 }

@@ -1,5 +1,7 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
+	-- This config uses the legacy setup API; the main branch has a breaking new API.
+	branch = "master",
 	event = { "BufReadPre", "BufNewFile" },
 	build = ":TSUpdate",
 
@@ -9,15 +11,13 @@ return {
 
 	config = function()
 		local treesitter = require("nvim-treesitter.configs")
+		require("nvim-ts-autotag").setup()
 
 		treesitter.setup({
 			highlight = {
 				enable = true,
 			},
 			indent = { enable = true },
-			autotag = {
-				enable = true,
-			},
 			ensure_installed = {
 				"json",
 				"yaml",
